@@ -1,0 +1,13 @@
+# Blueprint do Render: cria o retransmissor do duelo online (pasta servidor/).
+# No Render: New → Blueprint → escolha este repositório. Plano gratuito (dorme após 15 min sem uso; acorda em ~1 min).
+services:
+  - type: web
+    name: duelos-online
+    runtime: node
+    plan: free
+    region: virginia
+    rootDir: servidor
+    buildCommand: npm install --omit=dev
+    startCommand: node servidor.js
+    healthCheckPath: /saude
+    autoDeploy: true
