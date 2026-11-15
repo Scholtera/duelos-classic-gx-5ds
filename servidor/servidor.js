@@ -63,7 +63,9 @@ wss.on('connection', ws => {
     }
     if (m.op === 'retomar' && !ws.sala) {
       const codigo = texto(m.codigo, 6).toUpperCase(), alvo = salas.get(codigo);
-      if (!alvo || !alvo.chave || alvo.chave !== texto(m.chave, 64) || alvo.anfitriao) return enviar(ws, { op: 'erro', motivo: 'Não foi possível retomar a sala (ela expirou).' });
+      if (!alvo || !alvo.chave || alvo.chave !== texto(m.chave, 64)) return enviar(ws, { op: 'erro', motivo: 'Não foi possível retomar a sala (ela expirou).' });
+      // a conexão antiga ainda pode parecer viva (o proxy demora a avisar a queda): a chave secreta prova que é o mesmo anfitrião
+      if (alvo.anfitriao && alvo.anfitriao !== ws) { const velho = alvo.anfitriao; velho.sala = null; try { velho.terminate(); } catch { /* ignora */ } }
       alvo.anfitriao = ws; alvo.orfaAte = 0; alvo.ultimo = Date.now(); ws.sala = codigo; ws.papel = 'anfitriao';
       enviar(ws, { op: 'sala', codigo, retomada: true });
       if (alvo.convidado) { enviar(alvo.convidado, { op: 'anfitriao-voltou' }); enviar(ws, { op: 'par', retomado: true }); }
