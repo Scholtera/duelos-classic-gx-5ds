@@ -1,0 +1,10 @@
+{
+  "name": "duelos-retransmissor",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Retransmissor do duelo online do Duelos Classic GX 5D's (salas com código; o duelo roda no PC do anfitrião).",
+  "main": "servidor.js",
+  "scripts": { "start": "node servidor.js" },
+  "engines": { "node": ">=20" },
+  "dependencies": { "ws": "8.18.3" }
+}
